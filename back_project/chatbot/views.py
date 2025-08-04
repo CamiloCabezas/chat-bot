@@ -7,7 +7,7 @@ from rest_framework import status
 from .models import QuestionAnswer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd 
-
+from rest_framework.permissions import AllowAny
 
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -50,9 +50,11 @@ class CargarembeddingsMasivos(APIView):
     
     
 class ResponderMesanjes(APIView):
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         data = request.data.get("pregunta", [])
-        
+        print(data)
         if not data:
             return Response({'Error': 'No hay Pregunta'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -62,11 +64,15 @@ class ResponderMesanjes(APIView):
         response = (CargarembeddingsMasivos.get(self, request))
         df_embaddings = pd.DataFrame(response.data)
         
-        simil = df_embaddings
+        simil = df_embaddings['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
         
-        ## Aca en este punto vamos  agenerar lka comparacion con el coseno para poder tener el mque mayor similitud dtenga de esta manera podremos obtener la mejor respuesta
+        index_max = simil.idxmax()
         
-        return Response(embedding_pregunta, status=status.HTTP_200_OK)
+        respuesta = df_embaddings.loc[index_max, 'answer']
+      
+        # Ya aca estaria generando toda la logica de responder segun la base de datos que tenemos, ahora necesitariamos es ver como se comporta en el front
+        
+        return Response(respuesta, status=status.HTTP_200_OK)
 
         
         
