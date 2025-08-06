@@ -10,6 +10,7 @@ import pandas as pd
 from rest_framework.permissions import AllowAny
 
 
+# model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 class CargarembeddingsMasivos(APIView):
@@ -65,6 +66,9 @@ class ResponderMesanjes(APIView):
         df_embaddings = pd.DataFrame(response.data)
         
         simil = df_embaddings['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
+        
+        if max(simil) < 0.65:
+            return Response("No he entendido tu pregunta")
         
         index_max = simil.idxmax()
         
