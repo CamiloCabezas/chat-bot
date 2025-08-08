@@ -14,11 +14,12 @@ function App() {
   },[message])
 
   const categorias = [
-    {id:"1", nombre:"Marcajes"},
-    {id:"2", nombre:"Acceso de Cuenta"},
-    {id:"3", nombre:"Reduccion Laboral"},
-    {id:"4", nombre:"Cargue de Mallas"},
-    {id:"5", nombre:"Movimiento de Personal"}
+    {id:"MA", nombre:"Marcajes"},
+    {id:"AC", nombre:"Acceso de Cuenta"},
+    {id:"RL", nombre:"Reduccion Laboral"},
+    {id:"CM", nombre:"Cargue de Mallas"},
+    {id:"MP", nombre:"Movimiento de Personal"},
+    {id:"OR", nombre:"Otro"}
   ]
   const handleCategoriaClick = (id, nombre) => {
     setCategoria(id);
@@ -49,7 +50,7 @@ function App() {
         },
         
         
-        body: JSON.stringify({ pregunta: input }),
+        body: JSON.stringify({ pregunta: input, categoria: categoria }),
       });
       
       

@@ -10,8 +10,7 @@ import pandas as pd
 from rest_framework.permissions import AllowAny
 
 
-# model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 class CargarembeddingsMasivos(APIView):
     def post(self, request):
@@ -25,6 +24,7 @@ class CargarembeddingsMasivos(APIView):
         for item in data:
             pregunta = item.get('pregunta')
             respuesta = item.get('respuesta')
+            categoria =item.get('categoria')
             
             if not pregunta or not respuesta:
                 return Response(
@@ -35,8 +35,9 @@ class CargarembeddingsMasivos(APIView):
             preguntas_respuestas = QuestionAnswer(
                 question = pregunta,
                 answer = respuesta,
-                embedding =embedding
-            )
+                embedding =embedding,
+                categorie = categoria
+            ) 
             preguntas_respuestas.save()
             
             resultados.append(QuestionAnswerSerializer(preguntas_respuestas).data)
@@ -54,8 +55,10 @@ class ResponderMesanjes(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
-        data = request.data.get("pregunta", [])
+        data = request.data.get("pregunta")
+        id = request.data.get("categoria")
         print(data)
+        print(id)# con esto vamos a poder hacer el filtrado por la categoria
         if not data:
             return Response({'Error': 'No hay Pregunta'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -64,8 +67,9 @@ class ResponderMesanjes(APIView):
         embedding_pregunta = model.encode(data)
         response = (CargarembeddingsMasivos.get(self, request))
         df_embaddings = pd.DataFrame(response.data)
+        df_filtrado_categoria = df_embaddings[df_embaddings['categorie'] == id]
         
-        simil = df_embaddings['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
+        simil = df_filtrado_categoria['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
         
         if max(simil) < 0.65:
             return Response("No he entendido tu pregunta")

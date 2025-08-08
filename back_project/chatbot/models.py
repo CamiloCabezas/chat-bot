@@ -4,9 +4,20 @@ from datetime import timedelta
 import uuid
 
 class QuestionAnswer(models.Model):
+    categorias = [
+        ("MA","Marcajes"),
+        ("AC", "Acceso de Cuenta"),
+        ("RL", "Reduccion Laboral"),
+        ("CM", "Cargue de Mallas"),
+        ("MP", "Movimiento de Personal"),
+        ("OR", "Otro")
+    ]
+    
+    
     id = models.AutoField(primary_key=True)
     question = models.TextField()
     answer = models.TextField()
+    categorie = models.CharField(max_length=2, choices=categorias, default="OR")
     embedding = models.JSONField()
     
     def __str__(self):
