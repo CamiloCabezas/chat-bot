@@ -16,7 +16,7 @@ def get_model():
     global _model
     if _model is None:
         print("Cargando modelo... (esto puede tardar unos segundos la primera vez)")
-        _model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
+        _model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
     return _model
 
 class CargarembeddingsMasivos(APIView):
