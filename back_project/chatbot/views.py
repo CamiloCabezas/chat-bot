@@ -10,7 +10,14 @@ import pandas as pd
 from rest_framework.permissions import AllowAny
 
 
-model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
+# model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
+
+def get_model():
+    global _model
+    if _model is None:
+        print("Cargando modelo... (esto puede tardar unos segundos la primera vez)")
+        _model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
+    return _model
 
 class CargarembeddingsMasivos(APIView):
     def post(self, request):
@@ -30,6 +37,8 @@ class CargarembeddingsMasivos(APIView):
                 return Response(
                     {'error':'Faltan datos'}, status=status.HTTP_400_BAD_REQUEST
                 )
+                
+            model = get_model()
             embedding = model.encode(pregunta).tolist()
             
             preguntas_respuestas = QuestionAnswer(
