@@ -72,7 +72,7 @@ class ResponderMesanjes(APIView):
             return Response({'Error': 'No hay Pregunta'}, status=status.HTTP_400_BAD_REQUEST)
         
         #Ya recibo el mensaje
-        
+        model = get_model()
         embedding_pregunta = model.encode(data)
         response = (CargarembeddingsMasivos.get(self, request))
         df_embaddings = pd.DataFrame(response.data)
