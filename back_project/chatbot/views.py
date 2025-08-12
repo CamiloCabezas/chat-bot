@@ -62,21 +62,22 @@ class ResponderMesanjes(APIView):
         if not data:
             return Response({'Error': 'No hay Pregunta'}, status=status.HTTP_400_BAD_REQUEST)
         
-        #Ya recibo el mensaje
+        # #Ya recibo el mensaje
         
-        embedding_pregunta = model.encode(data)
-        response = (CargarembeddingsMasivos.get(self, request))
-        df_embaddings = pd.DataFrame(response.data)
-        df_filtrado_categoria = df_embaddings[df_embaddings['categorie'] == id]
+        # embedding_pregunta = model.encode(data)
+        # response = (CargarembeddingsMasivos.get(self, request))
+        # df_embaddings = pd.DataFrame(response.data)
+        # df_filtrado_categoria = df_embaddings[df_embaddings['categorie'] == id]
         
-        simil = df_filtrado_categoria['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
+        # simil = df_filtrado_categoria['embedding'].apply(lambda x: cosine_similarity([embedding_pregunta],[x])[0][0])
         
-        if max(simil) < 0.65:
-            return Response("No he entendido tu pregunta")
+        # if max(simil) < 0.65:
+        #     return Response("No he entendido tu pregunta")
         
-        index_max = simil.idxmax()
+        # index_max = simil.idxmax()
         
-        respuesta = df_embaddings.loc[index_max, 'answer']
+        # respuesta = df_embaddings.loc[index_max, 'answer']
+        respuesta = "No joda es el modelo"
       
         # Ya aca estaria generando toda la logica de responder segun la base de datos que tenemos, ahora necesitariamos es ver como se comporta en el front
         

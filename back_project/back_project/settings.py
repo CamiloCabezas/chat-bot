@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'back_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default2': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST' : 'aws-0-us-east-1.pooler.supabase.com',
         'NAME' : 'postgres',
@@ -87,7 +87,7 @@ DATABASES = {
         'USER' : 'postgres.hpuznteybiypgggapetf',
         'PASSWORD' : "Juancami172001"
         
-    },'default': {
+    },'default2': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USERNAME'),
